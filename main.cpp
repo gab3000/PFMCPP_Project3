@@ -173,59 +173,59 @@ struct CarWash //2)
 
 
 /*
-1)
+1)speaker
 5 properties:
-    1)
-    2)
-    3)
-    4)
-    5)
+    1)crossover frequency
+    2)woofer material
+    3)tweeter material
+    4)ported design
+    5)active design with rated power
 3 things it can do:
-    1)
-    2)
-    3)
+    1)active design can amplify a line level signal
+    2)can split the signal in 2 bands at crossover frequency
+    3)port can boost the low frequencies
  */
 
 /*
-2)
+2)car jumpstarter
 5 properties:
-    1)
-    2)
-    3)
-    4)
-    5)
+    1)current rating in amperes
+    2)battery technology
+    3)weight
+    4)short circuit protection
+    5)charge display leds
 3 things it can do:
-    1)
-    2)
-    3)
+    1)jumpstart a car 
+    2)power devices trough USB
+    3)display the battery charge level
  */
 
 /*
-3)
+3)midi controller
 5 properties:
-    1)
-    2)
-    3)
-    4)
-    5)
+    1)amount of keys
+    2)amount of knobs
+    3)display size
+    4)performance controls
+    5)weight 
 3 things it can do:
-    1)
-    2)
-    3)
+    1)send midi data when keys pressed
+    2)display current patch
+    3)transpose octave
  */
 
 /*
-4)
+4)air contitioning unit
 5 properties:
-    1)
-    2)
-    3)
-    4)
-    5)
+    1)portable
+    2)cooling power in BTU
+    3)noise level
+    4)heather option
+    5)directional fan
 3 things it can do:
-    1)
-    2)
-    3)
+    1)remove environment heat to control room temperature
+    2)heat a room
+    3)select the fan speed
  */
 
 /*
@@ -248,12 +248,12 @@ struct CarWash //2)
     1)
     2)
     3)
-    4)
+    4) 
     5)
 3 things it can do:
     1)
     2)
-    3)
+    3
  */
 
 /*
