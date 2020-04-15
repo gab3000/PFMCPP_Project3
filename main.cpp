@@ -299,17 +299,17 @@ struct CarWash //2)
  */
 
 /*
-10)
+10)microcontroller
 5 properties:
-    1)
-    2)
-    3)
-    4)
-    5)
+    1)USB interface
+    2)DA converters
+    3)AD converters
+    4)memory
+    5)reset button
 3 things it can do:
-    1)
-    2)
-    3)
+    1)store instructions received from computer trough USB
+    2)read data from AD converter 
+    3)control devices trough DA converter. 
  */
 
 #include <iostream>
