@@ -229,73 +229,73 @@ struct CarWash //2)
  */
 
 /*
-5)
+5)USB interface
 5 properties:
-    1)
-    2)
-    3)
-    4)
-    5)
+    1)speed in kb per second
+    2)standard (1.0 or 2.0 for USB ) 
+    3)cable length 
+    4)connector type
+    5)current it can receive for powering the board
 3 things it can do:
-    1)
-    2)
-    3)
+    1)get the program to be stored in memory
+    2)report errors
+    3)transmit serial data back to computer
  */
 
 /*
-6)
+6)DA converters
 5 properties:
-    1)
-    2)
-    3)
-    4) 
-    5)
+    1)amount of converters
+    2)bit depth
+    3)clocking speed
+    4)max output current
+    5)output impedance
 3 things it can do:
-    1)
-    2)
-    3
+    1)play audio
+    2)provide a constant voltaje for controlling a device
+    3)drive a transistor 
  */
 
 /*
-7)
+7)AD converters
 5 properties:
-    1)
-    2)
-    3)
-    4)
-    5)
+    1)amount of converters
+    2)bit depth
+    3)sampling speed
+    4)input impedance
+    5)overcurrent protection
 3 things it can do:
-    1)
-    2)
-    3)
+    1)read a constant sensor voltage
+    2)read an audio signal
+    3)read a TTL binary signal
  */
 
 /*
-8)
+8)memory
 5 properties:
-    1)
-    2)
-    3)
-    4)
-    5)
+    1)size
+    2)type of memory (ram , eprom, rom, flash)
+    3)clock speed
+    4)slot for flash card
+    5)power consumption
 3 things it can do:
-    1)
-    2)
-    3)
+    1)store script
+    2)store data read from sensors
+    3)store status 
  */
 
 /*
-9)
+9)reset button
 5 properties:
-    1)
-    2)
-    3)
-    4)
-    5)
+    1)size
+    2)location on the board
+    3)color
+    4)material
+    5)useful life
 3 things it can do:
-    1)
-    2)
-    3)
+    1)reset the script
+    2)produce a click sound
+    3)trigger a led
  */
 
 /*
