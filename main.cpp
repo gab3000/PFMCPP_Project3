@@ -522,7 +522,7 @@ struct Microcontroller
     //5)reset button
     ResetButton resetButton;
 
-    struct Script
+    struct Script      //this was not requested but can be used later
     {
         int scriptLength; 
     };
