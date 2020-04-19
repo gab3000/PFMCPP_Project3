@@ -185,7 +185,39 @@ struct CarWash //2)
     2)can split the signal in 2 bands at crossover frequency
     3)port can boost the low frequencies
  */
+struct Speaker
+{
+    //1)crossover frequency
+    float fc = 2000;
+    //2)woofer material
+    char wooferMaterial ='p';
+    //3)tweeter material
+    char tweeterMaterial = 'r';
+    //4)ported design
+    float portResonantFrequency = 48; 
+    //5)active design with rated power
+    float ratedAmpPower = 100;
+    
+    struct InputSignal
+    {
+        float level;
+        float fMin;
+        float fMax; 
 
+        void limitInputLevel( float maxIncomingPeakLevel = 10);
+        void bandPass( float minFreqAllowed = 20, float maxFreqAllowed = 20000 );
+    };
+
+    //1)active design can amplify a line level signal
+    float amplifySignal( InputSignal signal );
+    //2)can split the signal in 2 bands at crossover frequency
+    void splitSignal( InputSignal signal );
+    //3)port can boost the low frequencies
+    float boostLowFreq( InputSignal signal );
+
+    InputSignal signal;
+    
+};
 /*
 2)car jumpstarter
 5 properties:
@@ -199,7 +231,39 @@ struct CarWash //2)
     2)power devices trough USB
     3)display the battery charge level
  */
+struct CarJumpstarter
+{
+    //1)current rating in amperes
+    int maxCurrent = 300;
+    //2)battery technology
+    char batteryType = 'a';
+    //3)weight
+    float weight = 55;
+    //4)short circuit protection
+    float peakCurentTriggerProtection = 400;
+    //5)charge display leds
+    int ledAmount = 3;
+    int currentChargeLevel = 80; // added this to use in function
 
+    struct DeviceToBeCharged
+    {
+        bool isItACar = true;
+        bool isItUSB = false;
+        float currentDraw;
+
+        bool startEngine( int timesToAttemp = 3 );
+        float consumePower( float currentDraw = 250 );
+    };
+
+    //1)jumpstart a car 
+    float jumpstartCar( DeviceToBeCharged car);
+    //2)power devices trough USB
+    float chargePhone( DeviceToBeCharged phone);
+    //3)display the battery charge level
+    int displayChargeLevel();
+
+    DeviceToBeCharged car;
+};
 /*
 3)midi controller
 5 properties:
@@ -213,7 +277,27 @@ struct CarWash //2)
     2)display current patch
     3)transpose octave
  */
+struct MidiController
+{
+    //1)amount of keys
+    int amountOfKeys = 49;
+    //2)amount of knobs
+    int amountOfKnobs = 5;
+    //3)display size
+    int displayCharacters = 10;
+    //4)performance controls
+    int performanceControls = 2;
+    //5)weight 
+    float weight = 25;
 
+    //1)send midi data when keys pressed
+    int sendMidi( int keyPressed );
+    //2)display current patch
+    int displayPatch( int patchNumber );
+    //3)transpose octave
+    int transposeOctave( int semitones );
+
+};
 /*
 4)air contitioning unit
 5 properties:
@@ -227,11 +311,30 @@ struct CarWash //2)
     2)heat a room
     3)select the fan speed
  */
+struct AirConditioningUnit
+{
+    //1)portable
+    int numberOfCasters = 4;
+    //2)cooling power in BTU
+    float coolingBtu = 2000;
+    //3)noise level
+    float noiseLevel = 55;
+    //4)heather option
+    float heatherPower = 2000;
+    //5)directional fan
+    char fantype ='d';
 
+    //1)remove environment heat to control room temperature
+    float removeHeat( float roomHeatAmount = 8000 );
+    //2)heat a room
+    float heatRoom( float initialTemperature = 55 );
+    //3)select the fan speed
+    int selectFanSpeed( int selectedSpeed );
+};
 /*
 5)USB interface
 5 properties:
-    1)speed in kb per second
+    1)speed in Mb per second
     2)standard (1.0 or 2.0 for USB ) 
     3)cable length 
     4)connector type
@@ -241,11 +344,30 @@ struct CarWash //2)
     2)report errors
     3)transmit serial data back to computer
  */
+struct UsbInterface
+{
+    //1)speed in Mb per second
+    int usbSpeed = 40;
+    //2)standard (1.0 or 2.0 for USB ) 
+    int usbStandard = 1;
+    //3)cable length
+    float cableLength = 5; 
+    //4)connector type
+    char usbConnectorType = 'A';
+    //5)current it can receive for powering the board
+    float currentDrawForPower = 50;
 
+    //1)get the program to be stored in memory
+    int openLinkToGetData();
+    //2)report errors
+    char sendErrorToComputer( int errorCode = 0 );
+    //3)transmit serial data back to computer
+    int sendDataStreamToComputer ( int streamLength = 10 );
+};
 /*
 6)DA converters
 5 properties:
-    1)amount of converters
+    1)amount of channels
     2)bit depth
     3)clocking speed
     4)max output current
@@ -255,11 +377,30 @@ struct CarWash //2)
     2)provide a constant voltaje for controlling a device
     3)drive a transistor 
  */
+struct DaConverter
+{
+    //1)amount of channels
+    int daChannels = 5;
+    //2)bit depth
+    int daBitDepth =16;
+    //3)clocking speed
+    int daClockSpeed = 1;
+    //4)max output current
+    float daMaxCurrent = 10;
+    //5)output impedance
+    float daOutImpedance = 50;
 
+    //1)play audio
+    void playAudio( int audioLevel = 50, int channel = 0 );
+    //2)provide a constant voltaje for controlling a device
+    void setVoltage( int vLevel = 25, int channel = 1);
+    //3)drive a transistor
+    void setBoolOut( bool status, int channel = 2);
+};
 /*
 7)AD converters
 5 properties:
-    1)amount of converters
+    1)amount of channels
     2)bit depth
     3)sampling speed
     4)input impedance
@@ -269,7 +410,26 @@ struct CarWash //2)
     2)read an audio signal
     3)read a TTL binary signal
  */
+struct AdConverter
+{
+    //1)amount of channels
+    int adChannels = 2;
+    //2)bit depth
+    int adBitDepth = 12;
+    //3)sampling speed
+    int adSamplingSpeed = 1;
+    //4)input impedance
+    int adImpedance = 600;
+    //5)overcurrent protection
+    float adMaxCurrent = 10;
 
+    //1)read a constant sensor voltage
+    int readConstantValue( int channel = 0 );
+    //2)read an audio signal
+    int readAudioSignal( int SamplingSpeed = 1, int channel = 1 );
+    //3)read a TTL binary signal
+    int readBool( int channel = 3 );
+};
 /*
 8)memory
 5 properties:
@@ -283,7 +443,26 @@ struct CarWash //2)
     2)store data read from sensors
     3)store status 
  */
+struct Memory
+{
+    //1)size
+    int memorySize = 1000;
+    //2)type of memory (ram , eprom, rom, flash)
+    char memoryType = 'r';
+    //3)clock speed
+    int memorySpeed = 1000;
+    //4)slot for flash card
+    char memoryFlash = 'y';
+    //5)power consumption
+    int powerComsumption = 200;
 
+    //1)store script
+    int writeScript( int scriptSize = 500 );
+    //2)store data read from sensors
+    int writeData( int memoryLocation = 800, int dataSize = 1 );
+    //3)store status
+    int writeStatus( int statusCode = 0 );
+};
 /*
 9)reset button
 5 properties:
@@ -291,13 +470,32 @@ struct CarWash //2)
     2)location on the board
     3)color
     4)material
-    5)useful life
+    5)number of clicks before failure
 3 things it can do:
     1)reset the script
     2)produce a click sound
     3)trigger a led
  */
+struct ResetButton
+{
+    //1)size
+    float buttonHeight = 0.05f;
+    //2)location on the board
+    char buttonLocation = 't';
+    //3)color
+    char buttonColor = 'r';
+    //4)material
+    char buttonMaterial = 'p';
+    //5)number of clicks before failure
+    int buttonClicksBeforeFailure = 10000;
 
+    //1)reset the script
+    int triggerResetSginal( float clickTime = 0 );
+    //2)produce a click sound
+    void clickSound( float clickTime = 0 );
+    //3)trigger a led
+    void triggerLed( float clickTime = 0 );
+};
 /*
 10)microcontroller
 5 properties:
@@ -311,7 +509,31 @@ struct CarWash //2)
     2)read data from AD converter 
     3)control devices trough DA converter. 
  */
+struct Microcontroller
+{
+    //1)USB interface
+    UsbInterface usb0;
+    //2)DA converters
+    DaConverter da0;
+    //3)AD converters
+    AdConverter ad0;
+    //4)memory
+    Memory memory;
+    //5)reset button
+    ResetButton resetButton;
 
+    struct Script
+    {
+        int scriptLength; 
+    };
+
+    //1)store instructions received from computer trough USB
+    int storeScript( Script script );
+    //2)read data from AD converter
+    char readData( AdConverter ad0, int channel = 0 ); 
+    //3)control devices trough DA converter.
+    int setValue( DaConverter da0, int value = 0, int channel = 0 );
+};
 #include <iostream>
 int main()
 {
