@@ -373,62 +373,64 @@ struct UsbInterface
     4)max output current
     5)output impedance
 3 things it can do:
-    1)play audio
-    2)provide a constant voltaje for controlling a device
-    3)drive a transistor 
+    1)provide a constant voltaje for controlling a device
+    2)drive a transistor
+    3)read a constant sensor voltage 
  */
-struct DaConverter
+struct Converter
 {
     //1)amount of channels
-    int daChannels = 5;
+    int channels = 5;
     //2)bit depth
-    int daBitDepth =16;
+    int bitDepth =16;
     //3)clocking speed
-    int daClockSpeed = 1;
+    int clockSpeed = 1;
     //4)max output current
-    float daMaxCurrent = 10;
+    float maxCurrent = 10;
     //5)output impedance
-    float daOutImpedance = 50;
+    char adOrDa = 'a';
 
-    //1)play audio
-    void playAudio( int audioLevel = 50, int channel = 0 );
-    //2)provide a constant voltaje for controlling a device
-    void setVoltage( int vLevel = 25, int channel = 1);
-    //3)drive a transistor
-    void setBoolOut( bool status, int channel = 2);
+    //1)provide a constant voltaje for controlling a device
+    void setVoltage( int vLevel = 25, int channel = 1 );
+    //2)drive a transistor
+    void setBoolOut( bool status, int channel = 2 );
+     //3)read a constant sensor voltage
+    int readConstantValue( int channel = 3 );
+
+
 };
 /*
-7)AD converters
+7)serial port
 5 properties:
-    1)amount of channels
-    2)bit depth
-    3)sampling speed
-    4)input impedance
-    5)overcurrent protection
+    1)amount of channels 
+    2)speed
+    3)mode
+    4)data word length
+    5)error correction
 3 things it can do:
-    1)read a constant sensor voltage
-    2)read an audio signal
-    3)read a TTL binary signal
+    1)transmit data
+    2)receive data
+    3)set speed
  */
-struct AdConverter
+struct SerialPort
 {
     //1)amount of channels
-    int adChannels = 2;
-    //2)bit depth
-    int adBitDepth = 12;
-    //3)sampling speed
-    int adSamplingSpeed = 1;
-    //4)input impedance
-    int adImpedance = 600;
-    //5)overcurrent protection
-    float adMaxCurrent = 10;
+    int spChannels = 2; 
+    //2)speed
+    int speed = 128;
+    //3)mode
+    char mode ='a';
+    //4)data word length
+    int wordLength = 8;
+    //5)error correction
+    char errorCorrection = 'n';
 
-    //1)read a constant sensor voltage
-    int readConstantValue( int channel = 0 );
-    //2)read an audio signal
-    int readAudioSignal( int SamplingSpeed = 1, int channel = 1 );
-    //3)read a TTL binary signal
-    int readBool( int channel = 3 );
+    //1)transmit data
+    void transmitData( int channel = 1, char data = '0' );
+    //2)receive data
+    char receiveData( int channel = 2 );
+    //3)set speed
+    void setSpeed( int speed = 128 );
 };
 /*
 8)memory
@@ -500,23 +502,23 @@ struct ResetButton
 10)microcontroller
 5 properties:
     1)USB interface
-    2)DA converters
-    3)AD converters
+    2)converters
+    3)serial port
     4)memory
     5)reset button
 3 things it can do:
     1)store instructions received from computer trough USB
-    2)read data from AD converter 
-    3)control devices trough DA converter. 
+    2)get a data character from serial interface
+    3)read analog value from AD converter 
  */
 struct Microcontroller
 {
     //1)USB interface
     UsbInterface usb0;
-    //2)DA converters
-    DaConverter da0;
-    //3)AD converters
-    AdConverter ad0;
+    //2) converter
+    Converter ad;
+    //3)
+    SerialPort serialport;
     //4)memory
     Memory memory;
     //5)reset button
@@ -529,10 +531,10 @@ struct Microcontroller
 
     //1)store instructions received from computer trough USB
     int storeScript( Script script );
-    //2)read data from AD converter
-    char readData( AdConverter ad0, int channel = 0 ); 
-    //3)control devices trough DA converter.
-    int setValue( DaConverter da0, int value = 0, int channel = 0 );
+    //2)get a data character from serial interface
+    char getCharacter( SerialPort serialport, int channel = 1 ); 
+    //3)read analog value from AD converter 
+    char readValue( Converter ad, int channel = 0 ); 
 };
 #include <iostream>
 int main()
