@@ -198,7 +198,7 @@ struct Speaker
     //5)active design with rated power
     float ratedAmpPower = 100;
     
-    struct InputSignal
+    struct Signal
     {
         float level;
         float fMin;
@@ -209,13 +209,13 @@ struct Speaker
     };
 
     //1)active design can amplify a line level signal
-    float amplifySignal( InputSignal signal );
+    Signal amplifySignal( Signal signalToModify );
     //2)can split the signal in 2 bands at crossover frequency
-    void splitSignal( InputSignal signal );
+    Signal splitSignal( Signal signalToModify );
     //3)port can boost the low frequencies
-    float boostLowFreq( InputSignal signal );
+    Signal boostLowFreq( Signal signalToModify );
 
-    InputSignal signal;
+    Signal signal;
     
 };
 /*
