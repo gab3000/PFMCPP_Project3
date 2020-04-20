@@ -517,6 +517,7 @@ struct Microcontroller
     UsbInterface usb0;
     //2) converter
     Converter ad;
+    Converter da;
     //3)
     SerialPort serialport;
     //4)memory
