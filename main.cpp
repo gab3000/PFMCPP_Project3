@@ -219,7 +219,7 @@ struct Speaker
     
 };
 /*
-2)car jumpstarter
+2)jumpstarter
 5 properties:
     1)current rating in amperes
     2)battery technology
@@ -231,7 +231,7 @@ struct Speaker
     2)power devices trough USB
     3)display the battery charge level
  */
-struct CarJumpstarter
+struct JumpStarter
 {
     //1)current rating in amperes
     int maxCurrent = 300;
@@ -256,9 +256,9 @@ struct CarJumpstarter
     };
 
     //1)jumpstart a car 
-    float jumpstartCar( DeviceToBeCharged car);
+    float jumpStartCar( DeviceToBeCharged car );
     //2)power devices trough USB
-    float chargePhone( DeviceToBeCharged phone);
+    float chargePhone( DeviceToBeCharged phone );
     //3)display the battery charge level
     int displayChargeLevel();
 
@@ -347,13 +347,13 @@ struct AirConditioningUnit
 struct UsbInterface
 {
     //1)speed in Mb per second
-    int usbSpeed = 40;
+    int speed = 40;
     //2)standard (1.0 or 2.0 for USB ) 
-    int usbStandard = 1;
+    int standard = 1;
     //3)cable length
-    float cableLength = 5; 
+    float length = 5; 
     //4)connector type
-    char usbConnectorType = 'A';
+    char connectorType = 'A';
     //5)current it can receive for powering the board
     float currentDrawForPower = 50;
 
@@ -415,7 +415,7 @@ struct Converter
 struct SerialPort
 {
     //1)amount of channels
-    int spChannels = 2; 
+    int channels = 2; 
     //2)speed
     int speed = 128;
     //3)mode
@@ -448,20 +448,20 @@ struct SerialPort
 struct Memory
 {
     //1)size
-    int memorySize = 1000;
+    int Size = 1000;
     //2)type of memory (ram , eprom, rom, flash)
-    char memoryType = 'r';
+    char Type = 'r';
     //3)clock speed
-    int memorySpeed = 1000;
+    int Speed = 1000;
     //4)slot for flash card
-    char memoryFlash = 'y';
+    char Flash = 'y';
     //5)power consumption
     int powerComsumption = 200;
 
     //1)store script
     int writeScript( int scriptSize = 500 );
     //2)store data read from sensors
-    int writeData( int memoryLocation = 800, int dataSize = 1 );
+    int writeData( int location = 800, int dataSize = 1 );
     //3)store status
     int writeStatus( int statusCode = 0 );
 };
@@ -481,15 +481,15 @@ struct Memory
 struct ResetButton
 {
     //1)size
-    float buttonHeight = 0.05f;
+    float height = 0.05f;
     //2)location on the board
-    char buttonLocation = 't';
+    char location = 't';
     //3)color
-    char buttonColor = 'r';
+    char color = 'r';
     //4)material
-    char buttonMaterial = 'p';
+    char material = 'p';
     //5)number of clicks before failure
-    int buttonClicksBeforeFailure = 10000;
+    int clicksBeforeFailure = 10000;
 
     //1)reset the script
     int triggerResetSginal( float clickTime = 0 );
@@ -519,7 +519,7 @@ struct Microcontroller
     Converter ad;
     Converter da;
     //3)
-    SerialPort serialport;
+    SerialPort serialPort;
     //4)memory
     Memory memory;
     //5)reset button
@@ -533,7 +533,7 @@ struct Microcontroller
     //1)store instructions received from computer trough USB
     int storeScript( Script script );
     //2)get a data character from serial interface
-    char getCharacter( SerialPort serialport, int channel = 1 ); 
+    char getCharacter( SerialPort serialPort, int channel = 1 ); 
     //3)read analog value from AD converter 
     char readValue( Converter ad, int channel = 0 ); 
 };
