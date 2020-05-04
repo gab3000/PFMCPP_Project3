@@ -14,11 +14,47 @@ Create a branch named Part2
     you should be able to deduce the return type of those functions based on their usage in Person::run()
     You'll need to insert the Person struct from the video in the space below.
  */
+struct Person	
+{	
+	int age;
+	int height;
+	float hairLength;
+	float GPA;
+	unsigned int SATScore;
+
+    struct Foot				
+	{			
+        float distanceFromGround = 0 ;
+        float momentum = 0;
+
+    	int stepForward( float momentum, float distanceFromGround );		
+		float stepSize();		
+	};			
+
+    Foot leftFoot;
+    Foot rightFoot;
+
+    void run( int howFast, bool startWithLeftFoot );
+};
 
 
+int Person::Foot::stepForward( float momentumT0, float distanceFromGroundT0 )				
+{			
+    if ( momentumT0*distanceFromGroundT0 > 0 )
+    
+    return 1;			
+    
+    else return 0 ;
+}			
 
+float Person::Foot::stepSize()				
+{			
+	int legLength = 2;			
+	float sineOfStepAngle = .25;	
+    int stepDirection = Person::Foot::stepForward( momentum, distanceFromGround );
 
-
+	return  sineOfStepAngle * legLength * stepDirection;			
+}			
  /*
  2) provide implementations for the member functions you declared in your 10 user-defined types from the previous video outside of your UDT definitions.
  
@@ -35,31 +71,12 @@ send me a DM to check your pull request
  Wait for my code review.
  */
 
-
-/*
-1)speaker
-5 properties:
-    1)crossover frequency
-    2)woofer material
-    3)tweeter material
-    4)ported design
-    5)active design with rated power
-3 things it can do:
-    1)active design can amplify a line level signal
-    2)can split the signal in 2 bands at crossover frequency
-    3)port can boost the low frequencies
- */
 struct Speaker
 {
-    //1)crossover frequency
     float fc = 2000;
-    //2)woofer material
     char wooferMaterial ='p';
-    //3)tweeter material
     char tweeterMaterial = 'r';
-    //4)ported design
     float portResonantFrequency = 48; 
-    //5)active design with rated power
     float ratedAmpPower = 100;
     
     struct Signal
@@ -68,46 +85,64 @@ struct Speaker
         float fMin;
         float fMax; 
 
-        void limitInputLevel( float maxIncomingPeakLevel = 10);
+        void limitInputLevel( float maxIncomingPeakLevel = 10 );
         void bandPass( float minFreqAllowed = 20, float maxFreqAllowed = 20000 );
     };
 
-    //1)active design can amplify a line level signal
     Signal amplifySignal( Signal signalToModify );
-    //2)can split the signal in 2 bands at crossover frequency
     Signal splitSignal( Signal signalToModify );
-    //3)port can boost the low frequencies
     Signal boostLowFreq( Signal signalToModify );
 
     Signal signal;
-    
 };
-/*
-2)jumpstarter
-5 properties:
-    1)current rating in amperes
-    2)battery technology
-    3)weight
-    4)short circuit protection
-    5)charge display leds
-3 things it can do:
-    1)jumpstart a car 
-    2)power devices trough USB
-    3)display the battery charge level
- */
+
+Speaker::Signal Speaker::amplifySignal( Signal signalToModify )
+{
+    signalToModify.level += 3;
+    return signalToModify;
+}
+
+Speaker::Signal Speaker::splitSignal( Signal signalToModify )
+{
+    signalToModify.fMax = fc;       //will just return the woofer signal range, can't return 2 signals yet
+    return signalToModify;
+}
+
+Speaker::Signal Speaker::boostLowFreq( Signal signalToModify )
+{
+    signalToModify = splitSignal( signalToModify );
+    signalToModify.level += 1;
+    return signalToModify;
+}
+
+void Speaker::Signal::limitInputLevel( float maxIncomingPeakLevel )
+{
+    if( level > maxIncomingPeakLevel )
+    {
+        level = maxIncomingPeakLevel;
+    };
+}
+
+void Speaker::Signal::bandPass( float minFreqAllowed, float maxFreqAllowed )
+{
+    if( fMin < minFreqAllowed )
+    {
+        fMin = minFreqAllowed;
+    };
+    if ( fMax > maxFreqAllowed )
+    {
+        fMax = maxFreqAllowed;
+    }
+}
+///////////////////////////////////////////////////////////////////////
 struct JumpStarter
 {
-    //1)current rating in amperes
     int maxCurrent = 300;
-    //2)battery technology
     char batteryType = 'a';
-    //3)weight
     float weight = 55;
-    //4)short circuit protection
     float peakCurentTriggerProtection = 400;
-    //5)charge display leds
     int ledAmount = 3;
-    int currentChargeLevel = 80; // added this to use in function
+    int currentChargeLevel = 80;
 
     struct DeviceToBeCharged
     {
@@ -119,288 +154,357 @@ struct JumpStarter
         float consumePower( float currentDraw = 250 );
     };
 
-    //1)jumpstart a car 
     float jumpStartCar( DeviceToBeCharged car );
-    //2)power devices trough USB
     float chargePhone( DeviceToBeCharged phone );
-    //3)display the battery charge level
     int displayChargeLevel();
 
     DeviceToBeCharged car;
 };
-/*
-3)midi controller
-5 properties:
-    1)amount of keys
-    2)amount of knobs
-    3)display size
-    4)performance controls
-    5)weight 
-3 things it can do:
-    1)send midi data when keys pressed
-    2)display current patch
-    3)transpose octave
- */
+
+float JumpStarter::jumpStartCar( DeviceToBeCharged device )
+{
+    return currentChargeLevel - device.currentDraw*12/100;  //probably not correct formula
+}
+
+bool JumpStarter::DeviceToBeCharged::startEngine( int timesToAttempt )
+{
+    if( isItACar )
+    {
+        if( timesToAttempt <= 3 )   //will not allow more than 3 attempts
+        return true;
+        else return false;
+    }
+    else return false;    
+}
+
+float JumpStarter::DeviceToBeCharged::consumePower( float current )
+{
+    return current*12;    
+}
+
+int JumpStarter::displayChargeLevel()
+{
+    return currentChargeLevel*3/100;
+}
+///////////////////////////////////////////////////////////////////////
 struct MidiController
 {
-    //1)amount of keys
     int amountOfKeys = 49;
-    //2)amount of knobs
     int amountOfKnobs = 5;
-    //3)display size
     int displayCharacters = 10;
-    //4)performance controls
-    int performanceControls = 2;
-    //5)weight 
+    int performanceControls = 2; 
     float weight = 25;
 
-    //1)send midi data when keys pressed
     int sendMidi( int keyPressed );
-    //2)display current patch
     int displayPatch( int patchNumber );
-    //3)transpose octave
     int transposeOctave( int semitones );
-
 };
-/*
-4)air contitioning unit
-5 properties:
-    1)portable
-    2)cooling power in BTU
-    3)noise level
-    4)heather option
-    5)directional fan
-3 things it can do:
-    1)remove environment heat to control room temperature
-    2)heat a room
-    3)select the fan speed
- */
+
+int MidiController::sendMidi( int keyPressed )
+{
+    return keyPressed + 36;     // first C key is C1 36
+}
+
+int MidiController::displayPatch( int patchNumber)
+{
+    int bankNumber = patchNumber/8;
+    return bankNumber + ( patchNumber - bankNumber*8 );    
+}
+
+int MidiController::transposeOctave( int semitones )
+{
+    if ( semitones > 12 )
+    return semitones - 12;
+    else return semitones;
+}
+///////////////////////////////////////////////////////////////////////
 struct AirConditioningUnit
 {
-    //1)portable
     int numberOfCasters = 4;
-    //2)cooling power in BTU
-    float coolingBtu = 2000;
-    //3)noise level
+    int coolingBtu = 2000;
     float noiseLevel = 55;
-    //4)heather option
-    float heatherPower = 2000;
-    //5)directional fan
+    int heatherPower = 2000;
     char fantype ='d';
 
-    //1)remove environment heat to control room temperature
-    float removeHeat( float roomHeatAmount = 8000 );
-    //2)heat a room
-    float heatRoom( float initialTemperature = 55 );
-    //3)select the fan speed
+    double removeHeat( int roomHeatAmount = 8000 );      //changed float to doble to avoid warnings
+    double heatRoom( int initialTemperature = 55 );
     int selectFanSpeed( int selectedSpeed );
 };
-/*
-5)USB interface
-5 properties:
-    1)speed in Mb per second
-    2)standard (1.0 or 2.0 for USB ) 
-    3)cable length 
-    4)connector type
-    5)current it can receive for powering the board
-3 things it can do:
-    1)get the program to be stored in memory
-    2)report errors
-    3)transmit serial data back to computer
- */
+
+double AirConditioningUnit::removeHeat( int roomHeatAmount ) 
+{
+    return roomHeatAmount - coolingBtu*.75;
+}
+
+double AirConditioningUnit::heatRoom ( int initialTemperature )
+{
+    return initialTemperature + heatherPower*0.0005;
+}
+
+
+///////////////////////////////////////////////////////////////////////
 struct UsbInterface
 {
-    //1)speed in Mb per second
     int speed = 40;
-    //2)standard (1.0 or 2.0 for USB ) 
     int standard = 1;
-    //3)cable length
     float length = 5; 
-    //4)connector type
     char connectorType = 'A';
-    //5)current it can receive for powering the board
     float currentDrawForPower = 50;
 
-    //1)get the program to be stored in memory
     int openLinkToGetData();
-    //2)report errors
     char sendErrorToComputer( int errorCode = 0 );
-    //3)transmit serial data back to computer
-    int sendDataStreamToComputer ( int streamLength = 10 );
+    int sendDataStreamToComputer( int streamLength = 10 );
 };
-/*
-6)DA converters
-5 properties:
-    1)amount of channels
-    2)bit depth
-    3)clocking speed
-    4)max output current
-    5)output impedance
-3 things it can do:
-    1)provide a constant voltaje for controlling a device
-    2)drive a transistor
-    3)read a constant sensor voltage 
- */
+
+int UsbInterface::openLinkToGetData()
+{
+    return 1;
+}
+
+char sendErrorToComputer( int errorCode )
+{
+    if( errorCode == 0 )
+    {
+    return '0';
+    }
+    else return 'f';
+}
+
+int sendDataStreamToComputer( int streamLength )
+{
+    return streamLength;
+}
+///////////////////////////////////////////////////////////////////////
 struct Converter
 {
-    //1)amount of channels
     int channels = 5;
-    //2)bit depth
     int bitDepth =16;
-    //3)clocking speed
     int clockSpeed = 1;
-    //4)max output current
     float maxCurrent = 10;
-    //5)output impedance
     char adOrDa = 'a';
 
-    //1)provide a constant voltaje for controlling a device
     void setVoltage( int vLevel = 25, int channel = 1 );
-    //2)drive a transistor
     void setBoolOut( bool status, int channel = 2 );
-     //3)read a constant sensor voltage
     int readConstantValue( int channel = 3 );
-
-
 };
-/*
-7)serial port
-5 properties:
-    1)amount of channels 
-    2)speed
-    3)mode
-    4)data word length
-    5)error correction
-3 things it can do:
-    1)transmit data
-    2)receive data
-    3)set speed
- */
+
+void Converter::setVoltage( int vLevel, int channel )
+{
+    int dummy = 0;
+    
+    if ( adOrDa == 'd' )
+    {
+        dummy = vLevel ;
+        channel += 1;
+    }
+}
+
+void Converter::setBoolOut( bool status, int channel )
+{
+    if( status )
+    {
+        status = false;
+        channel += 1;
+    }
+}
+
+int Converter::readConstantValue( int channel ) 
+{
+    int dummy = 256;
+
+    if ( adOrDa == 'a' )
+    {
+        channel += 1;
+        return dummy;
+    }
+    return 0;
+}
+///////////////////////////////////////////////////////////////////////
 struct SerialPort
 {
-    //1)amount of channels
     int channels = 2; 
-    //2)speed
     int speed = 128;
-    //3)mode
     char mode ='a';
-    //4)data word length
     int wordLength = 8;
-    //5)error correction
     char errorCorrection = 'n';
 
-    //1)transmit data
     void transmitData( int channel = 1, char data = '0' );
-    //2)receive data
     char receiveData( int channel = 2 );
-    //3)set speed
-    void setSpeed( int speed = 128 );
+    void setSpeed( int speed );
 };
-/*
-8)memory
-5 properties:
-    1)size
-    2)type of memory (ram , eprom, rom, flash)
-    3)clock speed
-    4)slot for flash card
-    5)power consumption
-3 things it can do:
-    1)store script
-    2)store data read from sensors
-    3)store status 
- */
+
+void SerialPort::transmitData( int channel, char data )
+{
+    char dummy;
+
+    if( mode =='a' )
+    {
+        dummy = data;
+        channel += 1;
+    }
+}
+
+char SerialPort::receiveData( int channel )
+{
+    char dummy = '0';
+
+    if( channel < 2  )
+    {
+        channel += 1;
+        return dummy;
+    }
+    else return 'f';
+}
+
+void SerialPort::setSpeed( int chSpeed )
+{
+    int dummy;
+
+    if( chSpeed <= 256 )
+    {
+        dummy = chSpeed;
+    }
+}
+///////////////////////////////////////////////////////////////////////
 struct Memory
 {
-    //1)size
-    int Size = 1000;
-    //2)type of memory (ram , eprom, rom, flash)
-    char Type = 'r';
-    //3)clock speed
-    int Speed = 1000;
-    //4)slot for flash card
-    char Flash = 'y';
-    //5)power consumption
+    int size = 1000;
+    char type = 'r';
+    int speed = 1000;
+    char flash = 'y';
     int powerComsumption = 200;
 
-    //1)store script
     int writeScript( int scriptSize = 500 );
-    //2)store data read from sensors
     int writeData( int location = 800, int dataSize = 1 );
-    //3)store status
     int writeStatus( int statusCode = 0 );
 };
-/*
-9)reset button
-5 properties:
-    1)size
-    2)location on the board
-    3)color
-    4)material
-    5)number of clicks before failure
-3 things it can do:
-    1)reset the script
-    2)produce a click sound
-    3)trigger a led
- */
+
+int Memory::writeScript( int scriptSize )
+{
+    if( scriptSize < size/2 )
+    return size - scriptSize;
+    else return size;
+}
+
+int Memory::writeData( int location , int dataSize )
+{
+    if( location < size - dataSize )
+    return location + dataSize;
+    else return 0;
+}
+
+int Memory::writeStatus( int statusCode )
+{
+    if( statusCode > 100 )
+    return 100;
+    else return statusCode;
+}
+///////////////////////////////////////////////////////////////////////
 struct ResetButton
 {
-    //1)size
     float height = 0.05f;
-    //2)location on the board
     char location = 't';
-    //3)color
     char color = 'r';
-    //4)material
     char material = 'p';
-    //5)number of clicks before failure
     int clicksBeforeFailure = 10000;
 
-    //1)reset the script
     int triggerResetSginal( float clickTime = 0 );
-    //2)produce a click sound
     void clickSound( float clickTime = 0 );
-    //3)trigger a led
     void triggerLed( float clickTime = 0 );
 };
-/*
-10)microcontroller
-5 properties:
-    1)USB interface
-    2)converters
-    3)serial port
-    4)memory
-    5)reset button
-3 things it can do:
-    1)store instructions received from computer trough USB
-    2)get a data character from serial interface
-    3)read analog value from AD converter 
- */
+
+int ResetButton::triggerResetSginal( float clickTime )
+{
+    int dummy;
+
+    if( clickTime > 0 )
+    {
+        dummy = 1;
+        return 1;
+    }
+    return 0;
+}
+
+void ResetButton::clickSound( float clickTime )
+{
+    int x;
+    int dummy = 0;
+
+    if( clickTime > 0 )
+    {
+        for( x = 0; x < 100; x++ )
+        { dummy++;} 
+    }
+
+}
+void ResetButton::triggerLed( float clickTime )
+{
+    int dummy = 0;
+
+    if( clickTime > 0 )
+    {
+        dummy = 1;
+    }
+}
+
+///////////////////////////////////////////////////////////////////////
 struct Microcontroller
 {
-    //1)USB interface
     UsbInterface usb0;
-    //2) converter
     Converter ad;
     Converter da;
-    //3)
     SerialPort serialPort;
-    //4)memory
     Memory memory;
-    //5)reset button
     ResetButton resetButton;
 
-    struct Script      //this was not requested but can be used later
+    struct Script      
     {
         int scriptLength; 
     };
 
-    //1)store instructions received from computer trough USB
     int storeScript( Script script );
-    //2)get a data character from serial interface
     char getCharacter( SerialPort serialPort, int channel = 1 ); 
-    //3)read analog value from AD converter 
-    char readValue( Converter ad, int channel = 0 ); 
+    int readValue( Converter ad, int channel = 0 ); 
 };
+
+int Microcontroller::storeScript( Script script )
+{
+    int dummy = 0;
+    int x = 0;
+
+    for( x = 0; x < script.scriptLength + 1; x++ )
+    {
+        dummy = x;
+    }
+    return dummy;
+}
+
+char Microcontroller::getCharacter( SerialPort serialPort0, int channel )
+{
+    char dummy = 'f';
+    int pointer = 0; 
+
+    if( channel == 0 ) 
+    {
+        dummy = serialPort0.receiveData( 0 );
+        pointer = pointer + serialPort0.wordLength ;
+    }
+    return dummy;
+}
+
+int Microcontroller::readValue( Converter ad0, int channel0 )
+{
+    int dummy = 0;
+
+    if( ad0.adOrDa == 'a' )
+    {   
+        dummy = ad0.readConstantValue( channel0 );
+    }
+    return dummy;
+
+}
+
+
 #include <iostream>
 int main()
 {
